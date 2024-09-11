@@ -1,0 +1,60 @@
+/* components/Organization.css */
+.organization-container {
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .organization-image {
+    width: 200px; /* adjust the size as needed */
+    height: 150px;
+    object-fit: cover;
+  }
+  
+  .donate-button {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #007bff; /* adjust the color as needed */
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+  .back-button {
+    margin-top: 0px;
+    padding: 10px;
+    background-color: #007bff; /* adjust the color as needed */
+    color: #fff;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+  }
+
+  /* DonatePage.css */
+.donate-page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.centered-image {
+  max-width: 25%; /* Adjust the percentage based on your preference */
+}
+
+.centered-text {
+  color: black;
+}
+
+.with-margin {
+  margin-bottom: 20px; /* Adjust the value to create more or less space */
+}
+.donation-buttons button {
+  margin: 5px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+  

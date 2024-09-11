@@ -1,0 +1,8 @@
+Users : Debug
+
+Posts : Debug/Test Removing a post and checking if all comments are deleted as well
+
+Comments : Should be functional, test/debug
+
+Emails : Done
+
