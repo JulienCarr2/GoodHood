@@ -19,13 +19,14 @@ export const create = async (
   //ERROR CHECKING
   //do they exist
   owner = idChecker(owner);
-  if (!timestamp) throw "please supply timestamp";
-  if (!latitude) throw "please supply latitude";
-  if (!longitude) throw "please supply longitude";
-  if (!image) throw "Please supply image";
-  if (!title) throw "Please supply title";
-  if (!donationGoal) throw "Please supply donation goal";
-  if (!volunteerInfo) throw "Please supply volunteer information";
+  console.log(latitude)
+  if (timestamp === "") throw "please supply timestamp";
+  if (latitude === undefined) throw "please supply latitude";
+  if (longitude === undefined) throw "please supply longitude";
+  if (image === "") throw "Please supply image";
+  if (title === "") throw "Please supply title";
+  if (donationGoal == "") throw "Please supply donation goal";
+  if (volunteerInfo === "") throw "Please supply volunteer information";
   if (typeof latitude != 'number') throw "Latitude Must be int"
   if (typeof title != 'string') throw "title must be a string"
   if (typeof image != 'string') throw "image must be a string"

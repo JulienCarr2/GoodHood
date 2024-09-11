@@ -5,7 +5,6 @@ const homeContainerStyle = {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
-  height: '100vh',
   backgroundImage: 'url(/background.jpg)',  // Not needed here anymore
   backgroundSize: 'cover',
   backgroundPosition: 'center',
@@ -35,11 +34,11 @@ const Home = () => {
 
 
   return (
-    <div style={homeContainerStyle}>
+    <div class="content-container" style={homeContainerStyle}>
       {/* Background image can be placed here if desired */}
       <img src="/background.jpg" alt="Background Image" style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', top: 0, left: 0, filter: 'blur(3px)' }} /> {/* Add background image with blur filter */}
       <div style={textOverlayStyle}> {/* Wrap text content in the overlay */}
-        <h2 style={{...homeHeadingStyle, animation: 'fadeInOut 5s ease-in-out infinite' }}>Welcome to GoodHood!</h2>
+        <h2 style={{...homeHeadingStyle, animation: 'fadeInOut 5s ease-in-out infinite' }}>Welcome to Good Hood!</h2>
         <p style={{ fontSize: '1.5em', textAlign: 'center' }}>We're dedicated to making positive changes in your community.</p>
       </div>
     </div>

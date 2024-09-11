@@ -1,45 +1,86 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import "./Login.css"; // Import your CSS file for styling
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { gql, useLazyQuery } from "@apollo/client";
+import "../Login.css";
 
-function Login({ setIsAuth }) {
-  const [username, setUsername] = useState("");
-  const [loginText, setLoginText] = useState("");
+const checkUserQuery = gql`
+query Query(
+        $emailAddress: String!,
+        $password: String!
+) {
+  checkUser(
+    emailAddress: $emailAddress
+    password: $password
+  ) {
+    _id
+    username
+    firstName
+    lastName
+    userEmail
+  }
+}
+`;
+
+function processUser(obj) {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([key, value]) => key !== "__typename")
+      .map(([key, value]) => [key.replace(/^_/, ''), value]));
+}
+
+function Login() {
+  const [email, setEmail] = useState("");
+  const [errorMessage, setErrorMessage] = useState('');
   const [password, setPassword] = useState("");
-
+  const [cookies, setCookie, removeCookie] = useCookies(['user']);
+  const [checkUser] = useLazyQuery(checkUserQuery)
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // if already logged in, go back or return home
+  useEffect(() => {
+    if (cookies?.user)
+      navigate(location.state?.from ?? "/");
+  }, [cookies, navigate, location]);
 
   const handleClick = () => {
-    //navigate("/Regristration");
-    window.location.pathname = "/Registration";
+    navigate("/users/register");
   };
 
   const handleLogin = () => {
     // Check if the email is valid.
-    if (!isValidEmail(username)) {
-      setLoginText("Invalid email address.");
+    if (!isValidEmail(email)) {
+      setErrorMessage("Invalid email address.");
       return;
     }
 
     // Check the password requirements.
     const passwordValidationResult = validatePassword(password);
     if (passwordValidationResult !== "valid") {
-      setLoginText(passwordValidationResult);
+      setErrorMessage(passwordValidationResult);
       return;
     }
 
-    // If both email and password are valid, navigate to '/User'
-    //navigate("/UserPage");
-    window.location.pathname = "/UserPage";
-  };
-
-  const pageStyles = {
-    textAlign: "center",
-    padding: "20px",
-    backgroundSize: "500px 500px",
-    backgroundPosition: "center",
-    backgroundRepeat: "repeat",
-    height: "100vh",
+    checkUser({
+      variables: {
+        emailAddress: email.trim(),
+        password: password.trim(),
+      }
+    }).then((response) => {
+      const user = response.data?.checkUser
+      if (!user)
+        throw new Error("Bad Credentials.");
+      setErrorMessage("");
+      setCookie("user",
+        processUser(user),
+        {path: "/", sameSite: "strict", secure: true});
+      navigate("/users/self");
+    
+    }).catch((error) => {
+      setErrorMessage(error.message ?? error.toString());
+    });
+    
   };
 
   const validatePassword = (password) => {
@@ -55,19 +96,20 @@ function Login({ setIsAuth }) {
     return "valid";
   };
   
-
   const isValidEmail = (email) => {
     const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
     return emailRegex.test(email);
   };
 
   return (
-    <div className="pageStyles">
+    <div class="content-container">
       <div className="Login">
         <div className="box">
           <div>
             <h2>Login</h2>
-            <p>{loginText}</p>
+            <p style={{color: "red"}}>
+              {errorMessage}
+            </p>
             <div>
               <input
                 style={{
@@ -79,8 +121,8 @@ function Login({ setIsAuth }) {
                 }}
                 type="text"
                 placeholder="Email"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div>
@@ -103,7 +145,7 @@ function Login({ setIsAuth }) {
               Login
             </button>
             <button onClick={handleClick} className="register-button">
-              Register
+              Don't have an account?
             </button>
           </div>
         </div>

@@ -1,44 +1,35 @@
-import './App.css';
+import '../App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
-import GoodHoodLogo from "./GoodHoodLogo.PNG";
-
+import GoodHoodLogo from "../GoodHoodLogo.PNG";
 
 import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
 
-
 const NavBar = () => {
+  const [cookies, setCookie] = useCookies();
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const [isAuth] = useState(localStorage.getItem("isAuth"));
-  const [webName, setWebName] = useState(localStorage.getItem("webName"));
-
-  const handleLoginClick = () => {
-    window.location.pathname = "/login";
-  };
-
-  const handleHomeClick = () => {
-    //if (isAuth) {
-    //  window.location.pathname = "/timeline";
-    //} else {
-      window.location.pathname = "/";
-    }
-    const handlePostClick = () => {
-      window.location.pathname = "/Posts";
-  };
-
-
-
-
+  const handleLoginClick = () =>
+    navigate("/users/login", {state: { from: location.pathname}});
+  const handleLogoutClick = () =>
+    navigate("/users/logout", {state: { from: location.pathname}});
+  const handleBrandClick = () =>
+    navigate(cookies.user ? "/users/self" : "/");
+  const handleHomeClick = () => 
+    navigate("/");
 
   return (
-    
      <Navbar
         style={{
-          margin: "5px",
+          margin: "0px",
           justifyContent: "flex-end",
           fontFamily: "DM Sans",
         }}
@@ -47,32 +38,38 @@ const NavBar = () => {
       >
       <Container>
         <img src={GoodHoodLogo} width={111} height={75} alt = "Good Hood Logo" onClick={handleHomeClick}/>
-          <Navbar.Brand onClick={handleHomeClick}>
-            {isAuth ? webName : "Good Hood"}
+          <Navbar.Brand onClick={handleBrandClick}>
+            {cookies.user?.username ?? "Good Hood"}
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-              <Nav.Link onClick={handleHomeClick}>Home</Nav.Link>
-              <NavDropdown title="How to Help">
-                <NavDropdown.Item href="/Donations">
-                  Donate
-                </NavDropdown.Item>
-                <NavDropdown.Item href="/Volunteer">
-                 Volunteer
-                </NavDropdown.Item>
-              </NavDropdown>
+              <Nav.Link href="/donate">Donate</Nav.Link>
+              <Nav.Link href="/volunteer">Volunteer</Nav.Link>
+
               <NavDropdown title="Resources">
-                <NavDropdown.Item href="/ourmission">
+                <NavDropdown.Item href="/about/mission">
                   Our Mission
                 </NavDropdown.Item>
-                <NavDropdown.Item href="/AboutUs">
+                <NavDropdown.Item href="/about/team">
                   Meet the Creators
-              </NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link onClick={handlePostClick}>Posts</Nav.Link>
-              <Nav.Link href="/contactus">Contact Us</Nav.Link>
-              {isAuth ? (
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/about/contact">
+                  Contact Us
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              <NavDropdown title="Posts">
+                <NavDropdown.Item href="/posts">
+                  Create a Post
+                </NavDropdown.Item>
+                <NavDropdown.Item href="/search">
+                  See Posts
+                </NavDropdown.Item>
+                {/* TODO is search the same as posts?*/}
+              </NavDropdown>
+
+              {cookies.user ? (
                 <Button
                   style={{
                     display: "inline-block",
@@ -89,7 +86,7 @@ const NavBar = () => {
                     transition: "background-color 0.3s ease",
                     marginRight: "10px",
                   }}
-                  
+                  onClick={handleLogoutClick}
                 >
                   Sign Out
                 </Button>
@@ -119,8 +116,6 @@ const NavBar = () => {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-    
-
   );
 };
 

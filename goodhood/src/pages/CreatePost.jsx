@@ -128,6 +128,7 @@ function Posts(props) {
 	};
 
 	return (
+		<div class="content-container">
 		<div className="post">
 			<div className="input-selection">
 				<h1>Create a Post</h1>
@@ -195,6 +196,7 @@ function Posts(props) {
 					{errorMessage}
 				</Alert>
 			) : null}
+		</div>
 		</div>
 	);
 }

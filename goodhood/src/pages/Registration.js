@@ -1,15 +1,47 @@
+import { gql, useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
+
+const createUserQuery = gql`
+mutation Mutation(
+  $username: String!,
+  $firstName: String!,
+  $lastName: String!,
+  $userEmail: String!,
+  $password: String!
+) {
+  createUser(
+    username: $username
+    firstName: $firstName
+    lastName: $lastName
+    userEmail: $userEmail
+    password: $password
+  ) {
+    _id
+    username
+    firstName
+    lastName
+    userEmail
+  }
+}
+`;
+
+function processUser(obj) {
+  return Object.fromEntries(
+    Object.entries(obj)
+      .filter(([key, value]) => key !== "__typename")
+      .map(([key, value]) => [key.replace(/^_/, ''), value]));
+}
+
 function Registration() {
     const [email, setEmail] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [passwordConfirmation, setPasswordConfirmation] = useState("");
     const [registrationError, setRegistrationError] = useState("");
-  
-    //const postsCollectionRef = collection(db, "users/");
-  
-    const code = "";
+    const [createUser] = useMutation(createUserQuery);
+    const [cookies, setCookie, removeCookie] = useCookies(['user']);
   
     const handleRegister = async () => {
       // Check if the email is valid.
@@ -18,7 +50,7 @@ function Registration() {
         return;
       }
   
-      if (username == "") {
+      if (username === "") {
         setRegistrationError("Please enter a username.");
         return;
       }
@@ -35,38 +67,31 @@ function Registration() {
         setRegistrationError(passwordValidationResult);
         return;
       }
-  
-     // try {
-        // Use the createUserWithEmailAndPassword function from auth.js to handle registration
-       // await createUserWithEmailAndPassword(auth, email, password)
-       //   .then((data) => {
-         //   addUser(data.user.uid);
-          //})
-         // .catch((error) => {
-          //  console.log(error);
-         // });
-  
-       // handleLogout();
-     // } catch (error) {
-    //    setRegistrationError(error.message);
-     // }
+      
+      createUser({
+				variables: {
+					username: username,
+          userEmail: email,
+          password: password,
+					firstName: "NA", // TODO ??
+					lastName: "NA", // TODO ??
+				},
+			}).then((response) => {
+				const user = response.data?.createUser;
+				if (!user)
+          throw new Error("Could not register user.");
+        setCookie("user",
+          processUser(user),
+          {path: "/", sameSite: "strict", secure: true});
+        navigate("/");
+			}).catch((error) => {
+        setRegistrationError(error.message);
+      });
     };
   
-    //const addUser = async (uid) => {
-      //await addDoc(postsCollectionRef, {
-        //email,
-        //username,
-        //uid,
-        //code,
-      //});
-  
-     // localStorage.setItem("uid", uid);
-   // };
-  
     const validatePassword = (password) => {
-      const letterCount = password.replace(/[^a-zA-Z]/g, "").length;
-      if (letterCount < 8) {
-        return "Password must contain at least 8 letters.";
+      if (password.length < 8) {
+        return "Password must contain at least 8 characters.";
       }
       if (!/\d/.test(password)) {
         return "Password must contain at least one number.";
@@ -84,16 +109,8 @@ function Registration() {
   
     const navigate = useNavigate();
   
-    const handleLogout = () => {
-      setEmail("");
-      setPassword("");
-      setUsername("");
-      setPasswordConfirmation("");
-      setRegistrationError("");
-      navigate("/login");
-    };
-  
     return (
+      <div class="content-container">
       <div className="page">
       <div className="Login">
         <div className="box">
@@ -167,8 +184,8 @@ function Registration() {
               }}
               type="password"
               placeholder="Confirm Password"
-              //value={passwordConfirmation}
-             // onChange={(e) => setPasswordConfirmation(e.target.value)}
+              value={passwordConfirmation}
+              onChange={(e) => setPasswordConfirmation(e.target.value)}
             />
           </div>
           <button
@@ -179,6 +196,7 @@ function Registration() {
             Register
           </button>
         </div>
+      </div>
       </div>
       </div>
     );

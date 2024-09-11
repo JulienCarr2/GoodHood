@@ -38,7 +38,17 @@
 }
 
 .Navbar {
-  margin: 5px;
+  margin: 0px;
+  padding: 0px;
   justify-content: flex-end;
   font-family: "DM Sans";
+}
+
+.content-container {
+  flex: 1;
+  background-color: #c395e6;
+  height: 89.5vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }

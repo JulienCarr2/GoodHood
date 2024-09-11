@@ -114,6 +114,7 @@ const ContactUs = () => {
   };
 
   return (
+    <div class="content-container">
     <div style={pageStyles}>
       <div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.2)' }}> {/* White box for content */}
         <h1 style={headingStyles}>Contact Us</h1>
@@ -152,6 +153,7 @@ const ContactUs = () => {
           </button>
         </form>
       </div>
+    </div>
     </div>
   );
 };

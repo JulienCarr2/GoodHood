@@ -42,8 +42,8 @@ function UserPage() {
   };
 
   return (
-    <div style={{ textAlign: "center", margin: "auto", maxWidth: "600px" }}>
-      <h2>User Profile</h2>
+    <div class="content-container">
+      <div style={{ textAlign: "center", margin: "auto", maxWidth: "600px" }}>
       <div style={{ textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "20px" }}>
         <div style={{ textAlign: "left" }}>
           <input type="file" accept="image/*" onChange={handleImageUpload} style={{ display: "none" }} ref={fileInputRef} />
@@ -94,6 +94,7 @@ function UserPage() {
           <p>Byrd Feeders</p>
           <p>Total Donation: $2333</p>
         </div>
+      </div>
       </div>
     </div>
   );

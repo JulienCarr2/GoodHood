@@ -8,8 +8,8 @@ import organization4Image from '../Organizations/organization4.jpg';
 const Volunteer = () => {
   const navigate = useNavigate();
 
-  const handleClick = (page) => {
-    navigate(`/volunteer-page-${page}`);
+  const handleClick = (urlName) => {
+    navigate(`/volunteer/${urlName}`);
   };
 
   const pageStyles = {
@@ -60,23 +60,25 @@ const Volunteer = () => {
   };
 
   const organizations = [
-    { image: organization1Image, name: "American Red Cross", page: 1 },
-    { image: organization2Image, name: "New York Blood Center", page: 2 },
-    { image: organization3Image, name: "Toys For Tots", page: 3 },
-    { image: organization4Image, name: "The Hoboken Shelter", page: 4 },
+    { image: organization1Image, name: "American Red Cross", urlName: "red-cross" },
+    { image: organization2Image, name: "New York Blood Center", urlName: "ny-blood" },
+    { image: organization3Image, name: "Toys For Tots", urlName: "toys-for-tots" },
+    { image: organization4Image, name: "The Hoboken Shelter", urlName: "hoboken-shelter"},
   ];
 
   return (
+    <div class="content-container">
     <div style={pageStyles}>
       <h1>Choose an Organization to Volunteer for</h1>
       <div style={{ display: 'flex', flexWrap: 'wrap' }}>
         {organizations.map((org, index) => (
           <div key={index} style={organizationWrapperStyles}>
             <img src={org.image} alt={org.name} style={organizationImageStyles} />
-            <button onClick={() => handleClick(org.page)} style={buttonStyles}>{org.name}</button>
+            <button onClick={() => handleClick(org.urlName)} style={buttonStyles}>{org.name}</button>
           </div>
         ))}
       </div>
+    </div>
     </div>
   );
 };

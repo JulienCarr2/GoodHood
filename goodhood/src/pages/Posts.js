@@ -1,5 +1,5 @@
 import { gql, useMutation, useQuery } from "@apollo/client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -24,6 +24,58 @@ if (true) {
 }
 
 function Posts(props) {
+	const pageStyles = {
+		display: 'flex',
+		flexDirection: 'column',
+		justifyContent: 'center',
+		alignItems: 'center',
+		padding: '10px',
+		background: '#c395e6', // Lavender background color
+	};
+
+	const headingStyles = {
+	fontSize: '60px', // Increased heading size for impact
+	fontWeight: 'bold',
+	color: '#5f506b', // White text for better contrast
+	textShadow: '0px 2px 5px rgba(0, 0, 0, 0.3)', // Add subtle text shadow
+	marginBottom: '20px',
+	};
+
+	const subheadingStyles = {
+	fontSize: '22px', // Increased subheading size
+	color: 'gray', // Lighter color for readability
+	marginBottom: '40px',
+	};
+
+	const contactFormStyles = {
+	width: '500px', // Fixed width for form
+	padding: '40px', // Increased padding for more space
+	borderRadius: '10px', // Rounded corners for form
+	border: '1px solid #000', // Solid black border with 1px thickness
+	borderColor: 'gray',
+	backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+	};
+	
+
+	const inputStyles = {
+	width: '100%',
+	padding: '15px 20px', // Increased padding for better look
+	marginBottom: '15px',
+	border: '1px solid #ddd', // Lighter border color
+	borderRadius: '5px', // Rounded corners for inputs
+	
+
+	};
+
+	const submitButtonStyles = {
+	padding: '15px 30px', // Increased padding for better look
+	backgroundColor: '#7955b3', // Darker lavender button color
+	color: '#fff', // White text for button
+	border: 'none', // Remove border from button
+	borderRadius: '3px', // Rounded corners for button
+	cursor: 'pointer',
+	};
+
 	const [formData, setFormData] = useState({
 		title: "",
 		latitude: "",
@@ -35,7 +87,12 @@ function Posts(props) {
 	const navigate = useNavigate();
 	const [errorMessage, setErrorMessage] = useState("");
 	const [cookies, setCookie, removeCookie] = useCookies(['user']);
-
+	
+	
+	useEffect(() => {
+    if (!cookies?.user)
+      navigate("/users/login");
+  }, [cookies, navigate]);
 	const handleChange = (e) => {
 		setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
 	};
@@ -78,7 +135,6 @@ function Posts(props) {
 		let titleSubmit = "";
 		let latitudeSubmit = "";
 		let longitudeSubmit = "";
-		let imageSubmit = "";
 		let donationGoalSubmit = "";
 		let volunteerInfoSubmit = "";
 
@@ -91,9 +147,6 @@ function Posts(props) {
 		if (!(formData.longitude.trim() === "")) {
 			longitudeSubmit = formData.longitude.trim();
 		}
-		if (!(formData.image.trim() === "")) {
-			imageSubmit = formData.image.trim();
-		}
 		if (!(formData.donationGoal.trim() === "")) {
 			donationGoalSubmit = formData.donationGoal.trim();
 		}
@@ -104,7 +157,6 @@ function Posts(props) {
 		document.getElementById("title").value = "";
 		document.getElementById("latitude").value = "";
 		document.getElementById("longitude").value = "";
-		document.getElementById("image").value = "";
 		document.getElementById("donationGoal").value = "";
 		document.getElementById("volunteerInfo").value = "";
 
@@ -114,12 +166,12 @@ function Posts(props) {
 
 			mutateFunction({
 				variables: {
-					owner: cookies.user,
+					owner: cookies.user.id,
 					title: titleSubmit,
 					timestamp: (new Date()).toISOString(),
 					latitude: Number(latitudeSubmit),
 					longitude: Number(longitudeSubmit),
-					image: imageSubmit,
+					image: "temp.png",
 					donationGoal: Number(donationGoalSubmit),
 					volunteerInfo: volunteerInfoSubmit,
 				},
@@ -133,73 +185,72 @@ function Posts(props) {
 	};
 
 	return (
-		<div className="post">
-			<div className="input-selection">
-				<h1>Create a Post</h1>
-				{/* Example Form based on MUI documentation for TextField */}
-				<Alert severity="warning" sx={{ mt: 2 }}>
-					Input Your Information Below!
-				</Alert>
-				<Box
-					component="form"
-					sx={{
-						"& .MuiTextField-root": { m: 1, width: "25ch" },
-					}}
-					noValidate
-					autoComplete="off"
-					onSubmit={submitForm}
-				>
-					{/* onKeyDown solution provided by https://stackoverflow.com/questions/70264223/mui-textfield-how-to-prevent-form-from-being-submitted to handle form submission by enter key. */}
-					<Stack>
-						<Stack direction="row">
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="title"
-								name="title"
-								label="Title"
-							/>
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="latitude"
-								name="latitude"
-								label="Latitude"
-							/>
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="longitude"
-								name="longitude"
-								label="Longitude"
-							/>
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="image"
-								name="image"
-								label="Image"
-							/>
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="donationGoal"
-								name="donationGoal"
-								label="Donation Goal"
-							/>
-							<TextField
-								onChange={(e) => handleChange(e)}
-								id="volunteerInfo"
-								name="volunteerInfo"
-								label="Volunteer Info"
-							/>
-						</Stack>
-						<button type="submit">
-							Submit
-						</button>
+		<div style={pageStyles} class="content-container">
+			<div style={{ backgroundColor: '#fff', padding: '30px', borderRadius: '10px', boxShadow: '0px 10px 30px rgba(0, 0, 0, 0.2)' }}> {/* White box for content */}
+			<h1 style={headingStyles}>Create a Post</h1>
+			<p style={subheadingStyles}>Enter Your Information Below</p>
+			<Box
+				component="form"
+				sx={{
+					width: '500px', // Fixed width for form
+					padding: 'px', // Increased padding for more space
+					borderRadius: '10px', // Rounded corners for form
+					border: '1px solid #000', // Solid black border with 1px thickness
+					borderColor: 'gray',
+					backgroundColor: 'rgba(255, 255, 255, 0.8)', // Semi-transparent white background
+				}}
+				noValidate
+				autoComplete="off"
+				onSubmit={submitForm}
+			>
+				{/* onKeyDown solution provided by https://stackoverflow.com/questions/70264223/mui-textfield-how-to-prevent-form-from-being-submitted to handle form submission by enter key. */}
+				<Stack spacing={2}>
+					<Stack spacing={2}>
+						<TextField
+							onChange={(e) => handleChange(e)}
+							id="title"
+							name="title"
+							label="Title"
+						/>
+						<TextField
+							onChange={(e) => handleChange(e)}
+							id="latitude"
+							name="latitude"
+							label="Latitude"
+							type="number"
+						/>
+						<TextField
+							onChange={(e) => handleChange(e)}
+							id="longitude"
+							name="longitude"
+							label="Longitude"
+							type="number"
+						/>
+						<TextField
+							onChange={(e) => handleChange(e)}
+							id="donationGoal"
+							name="donationGoal"
+							label="Donation Goal"
+							type="number"
+						/>
+						<TextField
+							onChange={(e) => handleChange(e)}
+							id="volunteerInfo"
+							name="volunteerInfo"
+							label="Volunteer Info"
+						/>
 					</Stack>
-				</Box>
-			</div>
+				<button type="submit" style={submitButtonStyles}>
+					Submit
+				</button>
+				</Stack>
+			</Box>
 			{errorMessage ? (
 				<Alert severity="error" sx={{ mt: 2 }}>
 					{errorMessage}
 				</Alert>
 			) : null}
+			</div>
 		</div>
 	);
 }

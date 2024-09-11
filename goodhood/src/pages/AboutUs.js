@@ -39,7 +39,7 @@ const teamMembers = [
   },
   {
     name: 'Lennon Okun',
-    role: 'Backend/Machine Learning',
+    role: 'Front-End/Routing',
     src: TeamMember6Photo,
     bio: "My name is Lennon Okun, and I am a master's student at Stevens Institute of Technology studying Machine Learning.",
   },
@@ -49,7 +49,7 @@ const AboutUs = () => {
   const pageStyles = {
     textAlign: 'center',
     padding: '20px',
-    backgroundColor: '#f9f9f9',
+    backgroundColor: '#c395e6',
     minHeight: '100vh',
   };
 
@@ -61,15 +61,19 @@ const AboutUs = () => {
     textTransform: 'uppercase',
   };
 
+  const memberContainerStyles = {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '40px',
+  };
+
   const memberStyles = {
-    marginBottom: '40px',
     padding: '20px',
     backgroundColor: '#fff',
     borderRadius: '8px',
     maxWidth: '600px',
-    margin: '0 auto',
     boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
-  
   };
 
   const memberNameStyles = {
@@ -102,16 +106,18 @@ const AboutUs = () => {
   return (
     <div style={pageStyles}>
       <h1 style={headingStyles}>Meet the Creators</h1>
-      {teamMembers.map((member, index) => (
-        <div key={index} style={memberStyles}>
-          <img src={member.src} alt={member.name} style={memberImageStyles} />
-          <div style={{ padding: '20px' }}>
-            <h2 style={memberNameStyles}>{member.name}</h2>
-            <p style={memberRoleStyles}>{member.role}</p>
-            <p style={memberBioStyles}>{member.bio}</p>
+      <div style={memberContainerStyles}>
+        {teamMembers.map((member, index) => (
+          <div key={index} style={memberStyles}>
+            <img src={member.src} alt={member.name} style={memberImageStyles} />
+            <div style={{ padding: '20px' }}>
+              <h2 style={memberNameStyles}>{member.name}</h2>
+              <p style={memberRoleStyles}>{member.role}</p>
+              <p style={memberBioStyles}>{member.bio}</p>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

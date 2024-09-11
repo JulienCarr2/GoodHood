@@ -11,7 +11,7 @@ const DonatePage3 = ({ match }) => {
 
 
   const handleBackButtonClick = () => {
-    navigate("/donations");
+    navigate("/donate");
   };
 
   const handleDonation = (amount) => {

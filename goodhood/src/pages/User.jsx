@@ -7,6 +7,7 @@ import Box from "@mui/material/Box";
 
 function Template(props) {
     return (
+        <div class="conten-container">
         <Box>
             <Stack
             direction="row"
@@ -18,6 +19,7 @@ function Template(props) {
             </Box>
             </Stack>
         </Box>
+        </div>
     );
 }
 
